@@ -1,10 +1,15 @@
-const express = require("express");
-const connectDB = require("./config/db");
+const dns = require("dns");
 
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
+
+const express = require("express");
 require("dotenv").config();
+
+const connectDB = require("./config/db");
 
 const userRouter = require("./routes/userRouter");
 const productRouter = require("./routes/productRouter");
+const categoryRouter = require("./routes/categoryRouter");
 
 const app = express();
 
@@ -22,9 +27,12 @@ app.post("/test", (req, res) => {
     });
 });
 
-app.use("/product", productRouter);
+app.get("/hello", (req, res) => {
+    res.send("Hello from this server");
+});
 
-console.log("PRODUCT ROUTER LOADED");
+app.use("/product", productRouter);
+app.use("/category", categoryRouter);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
