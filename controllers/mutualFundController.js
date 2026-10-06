@@ -72,7 +72,7 @@ const getFundDetails = async (req, res) => {
                 isinDivReinvestment: meta.isin_div_reinvestment
             },
             {
-                new: true,
+                returnDocument: "after",
                 upsert: true
             }
         );
@@ -116,7 +116,7 @@ const getLatestNav = async (req, res) => {
                 latestNavDate: navDate
             },
             {
-                new: true
+                returnDocument: "after"
             }
         );
 
