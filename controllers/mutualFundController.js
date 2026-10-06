@@ -4,7 +4,8 @@ const {
     searchMutualFunds,
     getMutualFundDetails,
     getLatestNAV,
-    getNAVHistory
+    getNAVHistory,
+    getAllMutualFunds: getAllMutualFundsFromService
 } = require("../services/mfapiService");
 
 
@@ -163,10 +164,10 @@ const getNavHistory = async (req, res) => {
 };
 
 
-// TASK 5: Get Stored Mutual Funds
+// TASK 5: Get All Mutual Funds from MFAPI
 const getStoredMutualFunds = async (req, res) => {
     try {
-        const mutualFunds = await MutualFund.find();
+        const mutualFunds = await getAllMutualFundsFromService();
 
         res.status(200).json({
             message: "Mutual funds fetched successfully",
@@ -177,7 +178,7 @@ const getStoredMutualFunds = async (req, res) => {
         console.log(error);
 
         res.status(500).json({
-            message: "Database error",
+            message: "MFAPI error",
             error: error.message
         });
     }
