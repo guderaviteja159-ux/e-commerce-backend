@@ -2,42 +2,13 @@ const User = require("../models/user");
 
 const registerUser = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, phone, password } = req.body;
 
-        if (!name) {
+        // Only phone number validation
+        if (!/^[0-9]{10}$/.test(phone || "")) {
             return res.status(400).json({
                 status: false,
-                message: "Name is mandatory"
-            });
-        }
-
-        if (!email) {
-            return res.status(400).json({
-                status: false,
-                message: "Email is mandatory"
-            });
-        }
-
-        if (!password) {
-            return res.status(400).json({
-                status: false,
-                message: "Password is mandatory"
-            });
-        }
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!emailRegex.test(email)) {
-            return res.status(400).json({
-                status: false,
-                message: "Invalid email format"
-            });
-        }
-
-        if (password.length < 6) {
-            return res.status(400).json({
-                status: false,
-                message: "Password should contain at least 6 characters"
+                message: "Phone number must contain exactly 10 digits"
             });
         }
 
@@ -53,6 +24,7 @@ const registerUser = async (req, res) => {
         const user = new User({
             name,
             email,
+            phone,
             password
         });
 
@@ -68,7 +40,7 @@ const registerUser = async (req, res) => {
 
         return res.status(500).json({
             status: false,
-            message: "Server Error"
+            message: "Server errorr"
         });
     }
 };
@@ -80,17 +52,10 @@ const loginUser = async (req, res) => {
 
         const user = await User.findOne({ email });
 
-        if (!user) {
-            return res.status(404).json({
-                status: false,
-                message: "User does not exist"
-            });
-        }
-
-        if (user.password !== password) {
+        if (!user || user.password !== password) {
             return res.status(401).json({
                 status: false,
-                message: "Invalid password"
+                message: "Invalid email or password"
             });
         }
 
